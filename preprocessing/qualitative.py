@@ -6,6 +6,9 @@ import os
 import pandas as pd
 import numpy as np
 
+from aggregate_qualitative import ipToCity
+from azure.datalake.store import core, lib, multithread
+
 def dayDetails(transact):
 	users = transact['gigyaid'].dropna().unique()
 	print("Total number of users: ", len(users))
@@ -29,6 +32,7 @@ def monthlyTransaction(directory, outdirectory):
 
 
 def getQualiFeatures(transact):
+	print("Getting the qualitative features")
 	if len(transact) == 0:
 		return pd.DataFrame()
 	group = transact.groupby("gigyaid")
@@ -46,7 +50,36 @@ def getQualiFeatures(transact):
 	df = pd.concat([devicetype, deviceos, osversion, ipaddress, browsertype, connectivitytype, screensize, videoquality, actiontaken], axis = 1)
 	df = df.loc[:, ~df.columns.duplicated()]
 	df = df.set_index('gigyaid')
+	df["location"] = df["ipaddress"].apply(lambda x: ipToCity(x))
+	print("Finish getting the qualitative features.")
 	return(df)
 
+def getData(dataurl):
+	print("Getting Data")
+	with adl.open(dataurl, "rb") as f:
+	    df = pd.read_csv(f)
+	print("Successfull getting data!")
+	return df
+
+def getUrls(urltext):
+	with open(urltext, 'r') as f:
+		urls = f.read().splitlines()
+	return urls
+
 if __name__ == '__main__':
-	monthlyTransaction("../data/iWant/raw/10", "../data/iWant/processed/qualitative/10")
+	# token = lib.auth()
+	# adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
+	outdirectory = "../data/iWant/processed/qualitative"
+	urllist = getUrls("../data/urls.txt")
+	for i in urllist:
+		print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
+		outfile = os.path.join(outdirectory, "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4]))
+		transact = getData(i)
+		transact = transact.loc[transact.gigyaid.notnull()]
+		quali = getQualiFeatures(transact)
+		quali.to_csv(outfile)
+
+
+	# monthlyTransaction("../data/iWant/raw/10", "../data/iWant/processed/qualitative/10")
+
+
