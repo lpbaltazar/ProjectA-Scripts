@@ -46,20 +46,23 @@ def getQualiFeatures(transact):
 	screensize = group.apply(lambda x: x["screensize"].unique().tolist()).reset_index(name="screensize")
 	videoquality = group.apply(lambda x: x["videoquality"].unique().tolist()).reset_index(name="videoquality")
 	devicename = group.apply(lambda x: x["devicename"].unique().tolist()).reset_index(name="devicename")
-	actiontaken = group.apply(lambda x: x["actiontaken"].unique().tolist()).reset_index(name="actiontaken")
+	browserversion = group.apply(lambda x: x["browserversion"].unique().tolist()).reset_index(name="browserversion")
+	# actiontaken = group.apply(lambda x: x["actiontaken"].unique().tolist()).reset_index(name="actiontaken")
+	sitedomain = group.apply(lambda x: x["sitedomain"].unique().tolist()).reset_index(name="sitedomain")
+	# clickedcontent = group.apply(lambda x: x["clickedcontent"].unique().tolist()).reset_index(name="clickedcontent")
 	
-	df = pd.concat([devicetype, deviceos, osversion, ipaddress, browsertype, connectivitytype, screensize, videoquality, actiontaken], axis = 1)
+	df = pd.concat([devicetype, deviceos, osversion, ipaddress, browsertype, connectivitytype, screensize, videoquality, sitedomain, devicename, browserversion], axis = 1)
 	df = df.loc[:, ~df.columns.duplicated()]
 	df = df.set_index('gigyaid')
 	df["location"] = df["ipaddress"].apply(lambda x: ipToCity(x))
 	print("Finish getting the qualitative features.")
 	return(df)
 
-def getData(dataurl):
+def getData(dataurl, cols):
 	s = time.time()
 	print("Getting Data")
 	with adl.open(dataurl, "rb") as f:
-	    df = pd.read_csv(f, dtype = str, low_memory = False)
+	    df = pd.read_csv(f, usecols = cols, dtype = str, low_memory = False)
 	e = time.time()
 	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
 	print("Successfull getting data!", total_time)
@@ -75,10 +78,13 @@ if __name__ == '__main__':
 	adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
 	outdirectory = "../data/iWant/processed/qualitative"
 	urllist = getUrls("../data/urls.txt")
+	cols = ["fingerprintid", "previousfingerprintid", "sitedomain", "deviceos", 
+			"devicetype", "ipadress", "browsertype", "screensize", "gigyaid", 
+			"browserversion", "osversion", "devicename"]
 	for i in urllist:
 		print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
 		outfile = os.path.join(outdirectory, "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4]))
-		transact = getData(i)
+		transact = getData(i, cols)
 		transact = transact.loc[transact.gigyaid.notnull()]
 		quali = getQualiFeatures(transact)
 		print("Saving file.")
