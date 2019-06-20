@@ -67,8 +67,8 @@ def getUrls(urltext):
 	return urls
 
 if __name__ == '__main__':
-	# token = lib.auth()
-	# adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
+	token = lib.auth()
+	adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
 	outdirectory = "../data/iWant/processed/qualitative"
 	urllist = getUrls("../data/urls.txt")
 	for i in urllist:
@@ -78,10 +78,8 @@ if __name__ == '__main__':
 		transact = transact.loc[transact.gigyaid.notnull()]
 		quali = getQualiFeatures(transact)
 		print("Saving file.")
-                quali.to_csv(outfile)
-                print("\n\n\n")
-
-
+        quali.to_csv(outfile)
+        print("\n\n\n")
 	# monthlyTransaction("../data/iWant/raw/10", "../data/iWant/processed/qualitative/10")
 
 
