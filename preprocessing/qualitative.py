@@ -2,6 +2,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import os
+import time
 
 import pandas as pd
 import numpy as np
@@ -55,10 +56,13 @@ def getQualiFeatures(transact):
 	return(df)
 
 def getData(dataurl):
+	s = time.time()
 	print("Getting Data")
 	with adl.open(dataurl, "rb") as f:
-	    df = pd.read_csv(f)
-	print("Successfull getting data!")
+	    df = pd.read_csv(f, dtype = str, low_memory = False)
+	e = time.time()
+	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
+	print("Successfull getting data!", total_time)
 	return df
 
 def getUrls(urltext):
