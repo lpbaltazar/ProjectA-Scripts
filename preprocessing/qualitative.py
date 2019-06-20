@@ -40,6 +40,7 @@ def getQualiFeatures(transact):
 	connectivitytype = group.apply(lambda x: x["connectivitytype"].unique().tolist()).reset_index(name="connectivitytype")
 	screensize = group.apply(lambda x: x["screensize"].unique().tolist()).reset_index(name="screensize")
 	videoquality = group.apply(lambda x: x["videoquality"].unique().tolist()).reset_index(name="videoquality")
+	devicename = group.apply(lambda x: x["devicename"].unique().tolist()).reset_index(name="devicename")
 	actiontaken = group.apply(lambda x: x["actiontaken"].unique().tolist()).reset_index(name="actiontaken")
 	
 	df = pd.concat([devicetype, deviceos, osversion, ipaddress, browsertype, connectivitytype, screensize, videoquality, actiontaken], axis = 1)
