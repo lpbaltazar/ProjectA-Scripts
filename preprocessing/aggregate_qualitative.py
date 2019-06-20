@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 from ast import literal_eval
+from ip2geotools.databases.noncommercial import DbIpCity
 
 
 def getUnique(df, col):
@@ -15,6 +16,18 @@ def getUnique(df, col):
 	unique = group.apply(lambda x: x[col].unique()).reset_index(name=col)
 	unique[col] = unique[col].apply(lambda a: list(set([x for t in a for x in t])))
 	return unique
+
+def ipToCity(ipaddresses):
+	locations = []
+	for ip in ipaddresses:
+		try:
+			response = DbIpCity.get(ip, api_key='free')
+			loc = str(response.city) + ", " + str(response.region)
+			locations.append(loc)
+			print(ip, loc)
+		except:
+			pass
+	return locations
 
 def aggregateQualitative(quali_dir, out_dir, filename):
 	value = lambda x: x.strip("[]").replace("'", "").split(", ")
@@ -38,6 +51,8 @@ def aggregateQualitative(quali_dir, out_dir, filename):
 	new_df = pd.DataFrame(index = df.index.unique(), columns = cols)
 	for col in cols:
 		new_df[col] = getUnique(df, col)[col].values
+
+	new_df["location_city"] = new_df["ipaddress"].apply(lambda x: ipToCity(x))
 
 	new_df.to_csv(os.path.join(out_dir, filename))
 
