@@ -77,7 +77,9 @@ if __name__ == '__main__':
 		transact = getData(i)
 		transact = transact.loc[transact.gigyaid.notnull()]
 		quali = getQualiFeatures(transact)
-		quali.to_csv(outfile)
+		print("Saving file.")
+                quali.to_csv(outfile)
+                print("\n\n\n")
 
 
 	# monthlyTransaction("../data/iWant/raw/10", "../data/iWant/processed/qualitative/10")
