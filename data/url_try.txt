@@ -1,3 +1,2 @@
-ProdDataHub/TransactionFactTable/IWant/2019/03/IWantTransactionFactTable-20190303.csv
 ProdDataHub/TransactionFactTable/IWant/2018/12/IWantTransactionFactTable-20181209.csv
 ProdDataHub/TransactionFactTable/IWant/2019/01/IWantTransactionFactTable-20190106.csv
