@@ -68,16 +68,6 @@ def getData(dataurl, cols):
 	print("Successfull getting data!", total_time)
 	return df
 
-def getDataChunk(adl, dataurl, cols, chunksize):
-	s = time.time()
-	print("Getting Data")
-	with adl.open(dataurl, "rb") as f:
-	    df = pd.read_csv(f, usecols = cols, dtype = str, low_memory = False, chunksize = chunksize)
-	e = time.time()
-	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
-	print("Successfull getting data!", total_time)
-	return df
-
 def getUrls(urltext):
 	with open(urltext, 'r') as f:
 		urls = f.read().splitlines()
