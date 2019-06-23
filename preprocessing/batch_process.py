@@ -35,18 +35,24 @@ if __name__ == '__main__':
 
 	for i in urllist:
 		print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
-		df_chunk = getDataChunk(i, cols, chunksize = 5000000)
-		outfile = "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4])
-		counter = 1
-		for chunk in df_chunk:
-			print("Chunk number: ", counter)
-			df = chunk.loc[chunk.gigyaid.notnull()]
-			quali = getQualiFeatures(df)
-			temp_out = os.path.join(temp, str(counter)+".csv")
-			quali.to_csv(temp_out)
-			counter = counter + 1
+		try:
+			exist = adl.exists(i)
+			df_chunk = getDataChunk(i, cols, chunksize = 5000000)
+			outfile = "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4])
+			counter = 1
+			for chunk in df_chunk:
+				print("Chunk number: ", counter)
+				df = chunk.loc[chunk.gigyaid.notnull()]
+				quali = getQualiFeatures(df)
+				temp_out = os.path.join(temp, str(counter)+".csv")
+				quali.to_csv(temp_out)
+				counter = counter + 1
 
-		aggregateQualitative(temp, outdirectory, outfile)
+			aggregateQualitative(temp, outdirectory, outfile)
 
-		for f in os.listdir(temp):
-			os.remove(os.path.join(temp, f))
+			for f in os.listdir(temp):
+				os.remove(os.path.join(temp, f))
+		except:
+			print("Url {} dos not exist!".format(i))
+			pass
+			
