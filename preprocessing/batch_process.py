@@ -23,7 +23,7 @@ adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
 
 for i in urllist:
 	print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
-	df_chunk = getDataChunk(i, cols, chunksize = 5000000)
+	df_chunk = getDataChunk(adl, i, cols, chunksize = 5000000)
 	outfile = "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4])
 	counter = 1
 	for chunk in df_chunk:

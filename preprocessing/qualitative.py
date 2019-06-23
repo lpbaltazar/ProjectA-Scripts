@@ -68,7 +68,7 @@ def getData(dataurl, cols):
 	print("Successfull getting data!", total_time)
 	return df
 
-def getDataChunk(dataurl, cols, chunksize):
+def getDataChunk(adl, dataurl, cols, chunksize):
 	s = time.time()
 	print("Getting Data")
 	with adl.open(dataurl, "rb") as f:
