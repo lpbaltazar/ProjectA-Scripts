@@ -39,7 +39,10 @@ def aggregateQualitative(quali_dir, out_dir, filename):
 				"browsertype": value,
 				"connectivitytype": value,
 				"screensize": value,
-				"videoquality": value}
+				"videoquality": value,
+				"sitedomain": value,
+				"devicename": value,
+				"browserversion": value}
 	df = pd.DataFrame()
 	for i in os.listdir(quali_dir):
 		file = os.path.join(quali_dir, i)
@@ -50,9 +53,10 @@ def aggregateQualitative(quali_dir, out_dir, filename):
 	cols = df.columns
 	new_df = pd.DataFrame(index = df.index.unique(), columns = cols)
 	for col in cols:
+		# print(col)
 		new_df[col] = getUnique(df, col)[col].values
 
-	new_df["location_city"] = new_df["ipaddress"].apply(lambda x: ipToCity(x))
+	# new_df["location_city"] = new_df["ipaddress"].apply(lambda x: ipToCity(x))
 
 	new_df.to_csv(os.path.join(out_dir, filename))
 
