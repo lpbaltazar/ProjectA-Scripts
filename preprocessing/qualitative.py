@@ -54,7 +54,7 @@ def getQualiFeatures(transact):
 	df = pd.concat([devicetype, deviceos, osversion, ipaddress, browsertype, connectivitytype, screensize, videoquality, sitedomain, devicename, browserversion], axis = 1)
 	df = df.loc[:, ~df.columns.duplicated()]
 	df = df.set_index('gigyaid')
-	df["location"] = df["ipaddress"].apply(lambda x: ipToCity(x))
+	#df["location"] = df["ipaddress"].apply(lambda x: ipToCity(x))
 	print("Finish getting the qualitative features.")
 	return(df)
 
@@ -63,6 +63,16 @@ def getData(dataurl, cols):
 	print("Getting Data")
 	with adl.open(dataurl, "rb") as f:
 	    df = pd.read_csv(f, usecols = cols, dtype = str, low_memory = False)
+	e = time.time()
+	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
+	print("Successfull getting data!", total_time)
+	return df
+
+def getDataChunk(dataurl, cols, chunksize):
+	s = time.time()
+	print("Getting Data")
+	with adl.open(dataurl, "rb") as f:
+	    df = pd.read_csv(f, usecols = cols, dtype = str, low_memory = False, chunksize = chunksize)
 	e = time.time()
 	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
 	print("Successfull getting data!", total_time)
@@ -80,7 +90,7 @@ if __name__ == '__main__':
 	urllist = getUrls("../data/urls.txt")
 	cols = ["fingerprintid", "previousfingerprintid", "sitedomain", "deviceos", 
 			"devicetype", "ipadress", "browsertype", "screensize", "gigyaid", 
-			"browserversion", "osversion", "devicename"]
+			"browserversion", "osversion", "devicename", "connectivitytype", "videoquality"]
 	for i in urllist:
 		print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
 		outfile = os.path.join(outdirectory, "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4]))
