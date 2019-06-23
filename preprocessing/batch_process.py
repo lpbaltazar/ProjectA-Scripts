@@ -6,26 +6,34 @@ import os
 import pandas as pd
 import numpy as np
 
-from qualitative import getQualiFeatures
-from aggregate_qualitative import getUnique
+from qualitative import getQualiFeatures, getUrls, getDataChunk
+from aggregate_qualitative import getUnique, aggregateQualitative
 
-data = os.path.abspath("../data/iWant/raw/11/IWantTransactionFactTable-20181102.csv")
+outdirectory = "../data/iWant/processed/qualitative"
+temp = os.path.abspath("../data/iWant/temp")
+urllist = getUrls("../data/url_try.txt")
 
 cols = ["fingerprintid", "previousfingerprintid", "sitedomain", "deviceos", 
 			"devicetype", "ipaddress", "browsertype", "screensize", "gigyaid", 
 			"browserversion", "osversion", "devicename", "connectivitytype", "videoquality"]
 
-df_chunk = pd.read_csv(data, dtype = str, usecols = cols, low_memory = False, chunksize = 100000)
-all_df = []
-for chunk in df_chunk:
-	print(chunk.shape)
-	all_df.append(getQualiFeatures(chunk))
+token = lib.auth()
+adl = core.AzureDLFileSystem(token, store_name = 'bigdatadevdatalake')
 
-all_df = pd.concat(all_df)
-print(all_df.index.name)
-df_cols = all_df.columns
-new_df = pd.DataFrame(index = all_df.index.unique(), columns = cols)
-for col in df_cols:
-		new_df[col] = getUnique(all_df, col)[col].values
+for i in urllist:
+	print("{}-{}-{}".format(i[-12:-8], i[-8:-6], i[-6:-4]))
+	df_chunk = getDataChunk(i, cols, chunksize = 5000000)
+	outfile = "{}-{}-{}.csv".format(i[-12:-8], i[-8:-6], i[-6:-4])
+	counter = 1
+	for chunk in df_chunk:
+		print("Chunk number: ", counter)
+		df = chunk.loc[chunk.gigyaid.notnull()]
+		quali = getQualiFeatures(df)
+		temp_out = os.path.join(temp, str(counter)+".csv")
+		quali.to_csv(temp_out)
+		counter = counter + 1
 
-print(new_df)
+	aggregateQualitative(temp, outdirectory, outfile)
+
+	for f in os.listdir(temp):
+		os.remove(os.path.join(temp, f))
