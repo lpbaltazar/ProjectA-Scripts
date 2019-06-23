@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 
+from azure.datalake.store import core, lib, multithread
 from qualitative import getQualiFeatures, getUrls, getDataChunk
 from aggregate_qualitative import getUnique, aggregateQualitative
 
