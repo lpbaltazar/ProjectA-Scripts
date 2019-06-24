@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 
+from qualitative import monthlyTransaction
 from ast import literal_eval
 from ip2geotools.databases.noncommercial import DbIpCity
 
@@ -61,8 +62,10 @@ def aggregateQualitative(quali_dir, out_dir, filename):
 	new_df.to_csv(os.path.join(out_dir, filename))
 
 if __name__ == '__main__':
+	raw_dir = "../data/iWant/raw/10"
 	quali_dir = "../data/iWant/processed/qualitative/10"
-	out_dir = "../data/iWant/processed/qualitative/aggregated"
+	out_dir = "../data/iWant/processed/preliminary"
 	filename = "october_2018.csv"
+	monthlyTransaction(raw_dir, quali_dir)
 	aggregateQualitative(quali_dir, out_dir, filename)
 	
