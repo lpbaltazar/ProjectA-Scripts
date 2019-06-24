@@ -1,1 +1,5 @@
-# preprocessing-projectA
+# ProjectA-Scripts
+
+* Characterization
+* Preprocessing
+* Clustering
