@@ -7,7 +7,7 @@ import time
 import pandas as pd
 import numpy as np
 
-from aggregate_qualitative import ipToCity
+# from aggregate_qualitative import ipToCity
 from azure.datalake.store import core, lib, multithread
 
 def dayDetails(transact):
