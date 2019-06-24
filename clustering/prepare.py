@@ -30,7 +30,7 @@ def getUnique(df, col):
 def prepareDataDevice(data_dir, filename):
 	cols = ["gigyaid", "devicetype", "deviceos", "browsertype", "screensize", "videoquality"]
 	device_cols = ["devicetype", "deviceos", "browsertype", "screensize", "videoquality"]
-	df = pd.read_csv(os.path.join(data_dir, file), dtype = str, low_memory = False, usecols = cols, converters = converters)
+	df = pd.read_csv(os.path.join(data_dir, filename), dtype = str, low_memory = False, usecols = cols, converters = converters)
 
 	feature_cols = []
 	for col in device_cols:
