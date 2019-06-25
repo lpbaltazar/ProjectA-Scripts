@@ -28,7 +28,13 @@ def getUnique(df, col):
 	unique = df.unique()
 	unique = list(set([a for t in unique for a in t]))
 	unique = [word.replace('nan', 'nan_'+col) for word in unique]
-	return unique
+	unique = [word.upper() for word in unique]
+	if col == "deviceos":
+		unique = ['ANDROID' if re.search(r'ANDROID', word) else word for word in unique]
+		unique = ['IOS' if re.search(r'IOS', word) else word for word in unique]
+	if col == "devicetype":
+		unique = ['MOBILE' if re.search(r'IPHONE', word) else word for word in unique]
+	return list(set(unique))
 
 def prepareDataDevice(data_dir, filename):
 	cols = ["gigyaid", "devicetype", "deviceos", "browsertype", "screensize", "videoquality", "connectivitytype"]
@@ -81,7 +87,7 @@ def prepareLocation(data_dir, filename,  outfile):
 	print("Done converting to location")
 	print("\n\n")
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 	# prepareLocation("../data/iWant/processed/preliminary", "september_2018.csv", "september_2018_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "october_2018.csv", "october_2018_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "november_2018.csv", "november_2018_location.csv")
