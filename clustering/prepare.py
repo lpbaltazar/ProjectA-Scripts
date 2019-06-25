@@ -75,8 +75,7 @@ def ipToCity(ipaddresses):
 			locations.append(loc)
 			print(ip, loc)
 		except:
-			print("cant find")
-			pass
+			print('cant find ip')
 	return locations
 
 def prepareLocation(data_dir, filename,  outfile):
@@ -87,7 +86,7 @@ def prepareLocation(data_dir, filename,  outfile):
 	print("Done converting to location")
 	print("\n\n")
 
-# if __name__ == '__main__':
+#if __name__ == '__main__':
 	# prepareLocation("../data/iWant/processed/preliminary", "september_2018.csv", "september_2018_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "october_2018.csv", "october_2018_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "november_2018.csv", "november_2018_location.csv")
@@ -95,4 +94,5 @@ def prepareLocation(data_dir, filename,  outfile):
 	# prepareLocation("../data/iWant/processed/preliminary", "2019-01-06.csv", "2019-01-06_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "2018-12-09.csv", "2018-12-09_location.csv")
 	# prepareLocation("../data/iWant/processed/preliminary", "2019-02-03.csv", "2019-02-03_location.csv")
+
 
