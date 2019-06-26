@@ -33,6 +33,7 @@ def monthlyTransaction(directory, outdirectory):
 
 
 def getQualiFeatures(transact):
+	s = time.time()
 	print("Getting the qualitative features")
 	if len(transact) == 0:
 		return pd.DataFrame()
@@ -56,6 +57,9 @@ def getQualiFeatures(transact):
 	df = df.set_index('gigyaid')
 	#df["location"] = df["ipaddress"].apply(lambda x: ipToCity(x))
 	print("Finish getting the qualitative features.")
+	e = time.time()
+	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
+	print("Process time: ", total_time)
 	return(df)
 
 def getData(dataurl, cols):
