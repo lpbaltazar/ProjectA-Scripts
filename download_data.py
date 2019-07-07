@@ -10,7 +10,8 @@ def download(download_dir, data_dir):
 	download_dir = "december_2018"
 
 	for f in adl.ls(data_dir):
-		outfile = os.joindir(download_dir, f[-38:])
+        print(f[-38:])
+		outfile = os.path.join(download_dir, f[-38:])
 		downloader = multithread.ADLDownloader(adl, f, outfile)
 		if downloader.successful():
 			print("Finished Downloading!")
